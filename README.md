@@ -18,11 +18,18 @@ Supported frameworks:
 
 Install this package and one supported server framework:
 
-```sh
-pnpm add react-router-adapters hono
-```
-
-Replace `hono` with `h3` or `elysia` when using another adapter.
+- Hono
+  ```sh
+  pnpm add react-router-adapters hono @hono/node-server
+  ```
+- H3
+  ```sh
+  pnpm add react-router-adapters h3
+  ```
+- Elysia
+  ```sh
+  pnpm add react-router-adapters elysia @elysiajs/node
+  ```
 
 ## Usage
 
@@ -35,13 +42,7 @@ import { defineConfig } from "vite";
 import { rrAdapter } from "react-router-adapters";
 
 export default defineConfig({
-  plugins: [
-    reactRouter(),
-    rrAdapter({
-      entry: "server.ts",
-      framework: "hono",
-    }),
-  ],
+  plugins: [reactRouter(), rrAdapter({ entry: "server.ts", framework: "hono" })],
 });
 ```
 
@@ -93,9 +94,14 @@ Run the generated server build directly:
 Server entries use the default export unless `export` is specified:
 
 ```ts
+// server.ts
+export const app = new Hono().get("/api/health", (c) => {
+  return c.json({ status: "ok" });
+});
+// vite.config.ts
 rrAdapter({
   entry: "server.ts",
-  export: "app",
+  export: "app", // export name of the server app
   framework: "hono",
 });
 ```
