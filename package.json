@@ -1,6 +1,6 @@
 {
   "name": "react-router-adapters",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Server framework adapters for React Router",
   "keywords": [
     "adapter",
