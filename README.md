@@ -1,7 +1,6 @@
 # React Router Adapters
 
-Use Hono, H3, or Elysia as the HTTP server for a React Router framework-mode
-application.
+Use Hono, H3, or Elysia as the HTTP server for a React Router framework-mode application.
 
 Supported frameworks:
 
