@@ -5,12 +5,12 @@ import * as path from "node:path";
 import { serveStatic as h3ServeStatic, serve } from "h3";
 import * as fs from "node:fs/promises";
 
-export const start: Start<H3> = (app, build) => {
+export const start: Start<H3> = (app, build, publicDir = "public") => {
   app.use(
     path.posix.join(build.publicPath, "**"),
     serveStatic({ root: build.assetsBuildDirectory }),
   );
-  app.use("**", serveStatic({ root: "public" }));
+  app.use("**", serveStatic({ root: publicDir }));
 
   const handler = createHandler(build);
   app.all("*", (ev) => handler(ev.req));
@@ -23,14 +23,10 @@ export const start: Start<H3> = (app, build) => {
 function serveStatic(options: { root: string }): Middleware {
   return (ev) => {
     return h3ServeStatic(ev, {
-      getContents: (id) =>
-        fs.readFile(path.join(options.root, id)).catch(() => undefined),
+      getContents: (id) => fs.readFile(path.join(options.root, id)).catch(() => undefined),
       getMeta: (id) =>
         fs.stat(path.join(options.root, id)).then(
-          (stats) =>
-            stats.isFile()
-              ? { size: stats.size, mtime: stats.mtime }
-              : undefined,
+          (stats) => (stats.isFile() ? { size: stats.size, mtime: stats.mtime } : undefined),
           () => undefined,
         ),
     });

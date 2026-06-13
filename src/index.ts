@@ -10,6 +10,7 @@ const RESOLVED_SERVER_ENTRY = `\0${SERVER_ENTRY}`;
 
 export function rrAdapter(options: Options): Plugin {
   let root = process.cwd();
+  let publicDir = "public";
 
   return {
     name: "react-router-adapter",
@@ -25,6 +26,7 @@ export function rrAdapter(options: Options): Plugin {
     },
     configResolved(config) {
       root = config.root;
+      publicDir = config.publicDir;
     },
     configureServer(server) {
       server.middlewares.use(createMiddleware(server, options));
@@ -54,7 +56,7 @@ import mount from ${JSON.stringify(`${MODULE_NAME}/${options.framework}`)};
 import * as appModule from ${JSON.stringify(entry)};
 const app = appModule[${JSON.stringify(exportName)}];
 
-mount(app, build);
+mount(app, build, ${JSON.stringify(publicDir)});
 `;
       },
     },

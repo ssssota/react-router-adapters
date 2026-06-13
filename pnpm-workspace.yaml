@@ -1,4 +1,5 @@
 packages:
-  - fixtures/*
+  - examples/*
+  - tests
 allowBuilds:
   esbuild: false

@@ -5,12 +5,12 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import { serve } from "@hono/node-server";
 import * as path from "node:path";
 
-export const start: Start<Hono> = (app, build) => {
+export const start: Start<Hono> = (app, build, publicDir = "public") => {
   app.use(
     path.posix.join(build.publicPath, "*"),
     serveStatic({ root: build.assetsBuildDirectory }),
   );
-  app.use("*", serveStatic({ root: "public" }));
+  app.use("*", serveStatic({ root: publicDir }));
 
   const handler = createHandler(build);
   app.all("*", (c) => handler(c.req.raw));

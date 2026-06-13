@@ -4,19 +4,14 @@ import type { Start } from "./types.js";
 import { staticPlugin } from "@elysia/static";
 import { node } from "@elysia/node";
 
-export const start: Start<AnyElysia> = (app, build) => {
+export const start: Start<AnyElysia> = (app, build, publicDir = "public") => {
   app.use(
     staticPlugin({
       assets: build.assetsBuildDirectory,
       prefix: build.publicPath,
     }),
   );
-  app.use(
-    staticPlugin({
-      prefix: "",
-      assets: "public",
-    }),
-  );
+  app.use(staticPlugin({ prefix: "", assets: publicDir }));
 
   const handler = createHandler(build);
   app.all("*", (c) => handler(c.request));

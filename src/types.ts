@@ -22,4 +22,4 @@ export type ElysiaOptions = {
   framework: "elysia";
 };
 
-export type Start<T> = (app: T, build: ServerBuild) => void;
+export type Start<T> = (app: T, build: ServerBuild, publicDir?: string) => void;

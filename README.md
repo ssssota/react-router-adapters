@@ -18,13 +18,10 @@ Put `react-router-adapters` plugin in your Vite config.
 
 ```ts
 // vite.config.ts
-import { rrAdapter } from 'react-router-adapters';
+import { rrAdapter } from "react-router-adapters";
 // ...
 export default defineConfig({
-  plugins: [
-    reactRouter(),
-    rrAdapter({ entry: 'server.ts', framework: 'hono' }),
-  ],
+  plugins: [reactRouter(), rrAdapter({ entry: "server.ts", framework: "hono" })],
 });
 ```
 
@@ -44,8 +41,8 @@ Create entry module `server.ts`.
 
 ```ts
 // server.ts
-import { Hono } from 'hono';
-export default new Hono().get('/health', (c) => c.json({ status: 'ok' }));
+import { Hono } from "hono";
+export default new Hono().get("/health", (c) => c.json({ status: "ok" }));
 ```
 
 Change start script in `package.json`.
@@ -57,8 +54,8 @@ Change start script in `package.json`.
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "node ./build/server/index.js", // Run the server directly
-    "typecheck": "react-router typegen && tsc"
-  }
+    "typecheck": "react-router typegen && tsc",
+  },
 }
 ```
 
