@@ -9,19 +9,19 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs"
+      "default": "./dist/index.mjs"
     },
     "./elysia": {
       "types": "./dist/elysia.d.mts",
-      "import": "./dist/elysia.mjs"
+      "default": "./dist/elysia.mjs"
     },
     "./h3": {
       "types": "./dist/h3.d.mts",
-      "import": "./dist/h3.mjs"
+      "default": "./dist/h3.mjs"
     },
     "./hono": {
       "types": "./dist/hono.d.mts",
-      "import": "./dist/hono.mjs"
+      "default": "./dist/hono.mjs"
     }
   },
   "scripts": {
