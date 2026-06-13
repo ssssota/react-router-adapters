@@ -1,22 +1,18 @@
 import { createHandler } from "./handler.js";
 import type { AnyElysia } from "elysia";
 import type { Start } from "./types.js";
-import { staticPlugin } from "@elysia/static";
 import { node } from "@elysia/node";
+import { serveStatic } from "./static.js";
 
 export const start: Start<AnyElysia> = (app, build, publicDir = "public") => {
-  app.use(
-    staticPlugin({
-      assets: build.assetsBuildDirectory,
-      prefix: build.publicPath,
-    }),
-  );
-  app.use(staticPlugin({ prefix: "", assets: publicDir }));
-
   const handler = createHandler(build);
-  app.all("*", (c) => handler(c.request));
+  app.onError(({ code, request }) => {
+    if (code !== "NOT_FOUND") return;
+    return serveStatic(request, [build.assetsBuildDirectory, publicDir]).then(
+      (response) => response ?? handler(request),
+    );
+  });
 
-  // Ensure the adapter is set to node if not already
   if (app["~adapter"].name !== "@elysiajs/node") app["~adapter"] = node();
   app.listen(Number(process.env.PORT || 3000));
 };

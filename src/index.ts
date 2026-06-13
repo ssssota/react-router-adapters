@@ -20,13 +20,13 @@ export function rrAdapter(options: Options): Plugin {
       const opts = { input: SERVER_ENTRY } as const;
       return {
         environments: {
-          server: { build: { rolldownOptions: opts, rollupOptions: opts } },
+          ssr: { build: { rolldownOptions: opts, rollupOptions: opts } },
         },
       };
     },
     configResolved(config) {
       root = config.root;
-      publicDir = config.publicDir;
+      publicDir = path.relative(root, config.publicDir);
     },
     configureServer(server) {
       server.middlewares.use(createMiddleware(server, options));
@@ -34,7 +34,7 @@ export function rrAdapter(options: Options): Plugin {
 
     resolveId: {
       filter: {
-        id: /^virtual:react-router-adapters\/server-entry$/,
+        id: idToRegex(SERVER_ENTRY),
       },
       handler(id) {
         if (id !== SERVER_ENTRY) return null;
@@ -44,7 +44,7 @@ export function rrAdapter(options: Options): Plugin {
 
     load: {
       filter: {
-        id: RESOLVED_SERVER_ENTRY,
+        id: idToRegex(RESOLVED_SERVER_ENTRY),
       },
       handler(id) {
         if (id !== RESOLVED_SERVER_ENTRY) return null;
@@ -52,13 +52,17 @@ export function rrAdapter(options: Options): Plugin {
         const exportName = options.export ?? "default";
         return `\
 import * as build from "virtual:react-router/server-build";
-import mount from ${JSON.stringify(`${MODULE_NAME}/${options.framework}`)};
+import { start } from ${JSON.stringify(`${MODULE_NAME}/${options.framework}`)};
 import * as appModule from ${JSON.stringify(entry)};
 const app = appModule[${JSON.stringify(exportName)}];
 
-mount(app, build, ${JSON.stringify(publicDir)});
+start(app, build, ${JSON.stringify(publicDir)});
 `;
       },
     },
   };
+}
+
+function idToRegex(id: string): RegExp {
+  return new RegExp(`^${id}$`);
 }

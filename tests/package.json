@@ -1,0 +1,9 @@
+{
+  "name": "@react-router-adapters/tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "pretest": "pnpm --dir .. build && pnpm --filter \"@react-router-adapters/example-*\" build",
+    "test": "node --test examples.test.mjs"
+  }
+}

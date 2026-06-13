@@ -10,10 +10,10 @@ export const start: Start<H3> = (app, build, publicDir = "public") => {
     path.posix.join(build.publicPath, "**"),
     serveStatic({ root: build.assetsBuildDirectory }),
   );
-  app.use("**", serveStatic({ root: publicDir }));
+  app.use("/**", serveStatic({ root: publicDir }));
 
   const handler = createHandler(build);
-  app.all("*", (ev) => handler(ev.req));
+  app.all("/**", (ev) => handler(ev.req));
 
   serve(app, {
     port: Number(process.env.PORT) || 3000,
@@ -23,6 +23,7 @@ export const start: Start<H3> = (app, build, publicDir = "public") => {
 function serveStatic(options: { root: string }): Middleware {
   return (ev) => {
     return h3ServeStatic(ev, {
+      fallthrough: true,
       getContents: (id) => fs.readFile(path.join(options.root, id)).catch(() => undefined),
       getMeta: (id) =>
         fs.stat(path.join(options.root, id)).then(
